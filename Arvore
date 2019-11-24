@@ -1,0 +1,180 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+
+
+int main(){
+
+
+	typedef enum{false, true} boolean;
+
+	typedef struct No {
+	int codigo;
+	struct No* esquerda;
+	struct No* direita;
+}No;
+
+
+typedef struct  {
+	No* raiz;
+}Arvore;
+
+
+void cria_arvore(Arvore* arv) {
+	arv->raiz = NULL;
+}
+
+
+boolean eh_nulo(No* No_atual) {
+	return (No_atual == NULL);
+}
+
+
+
+No* insere(int cod, No* No_atual) {
+	if(eh_nulo(No_atual)) {
+		
+		No_atual = (No*) malloc(sizeof(No));
+		No_atual->codigo = cod;
+		No_atual->esquerda = NULL;
+		No_atual->direita = NULL;
+	}
+	else if(cod < No_atual->codigo) {
+		
+		No_atual->esquerda = insere(cod, No_atual->esquerda);
+		
+	}
+	else {
+		
+		No_atual->direita = insere(cod, No_atual->direita);
+	
+	}
+	return No_atual;
+}
+
+boolean pesquisa(int cod, No* No_atual) {
+	if(No_atual == NULL) {
+		return false;
+	}
+	else if(cod < No_atual->codigo) {
+		pesquisa(cod, No_atual->esquerda);
+	}
+	else if(cod > No_atual->codigo) {
+	pesquisa(cod, No_atual->direita);
+	}
+	else {
+	return true;
+	}
+}
+
+
+No* antecessor(No *atual, No *ant) {
+	if(ant->direita != NULL)
+		ant->direita = antecessor(atual,
+		ant->direita);
+	else {
+		No *aux;
+		atual->codigo = ant->codigo;
+		aux = ant;
+		ant = ant->esquerda;
+		free(aux);
+	}
+	return ant;
+	}
+
+
+
+No* remocao(int cod, No* No_atual) {
+	No* aux;
+	if(No_atual == NULL)
+		return NULL;
+	else if(cod < No_atual->codigo)
+ 	No_atual->esquerda = remocao(cod, No_atual->esquerda);
+	
+	else if(cod > No_atual->codigo)
+	No_atual->direita = remocao(cod, No_atual->direita);
+	
+	else if(No_atual->direita == NULL) {
+		aux = No_atual;
+		No_atual = No_atual->esquerda;
+		free(aux);
+	}
+	else if(No_atual->esquerda == NULL) {
+		aux = No_atual;
+		No_atual = No_atual->direita;
+	free(aux);
+}
+else {
+	No_atual->esquerda = antecessor(No_atual,
+	No_atual->esquerda);
+	}
+	return No_atual;
+}
+
+void pre_ordem(No* No_atual) {
+	if(No_atual != NULL) {
+	printf("%d \n", No_atual->codigo);
+	pre_ordem(No_atual->esquerda);
+	pre_ordem(No_atual->direita);
+	}
+}
+
+void em_ordem(No* No_atual) {
+	if(No_atual != NULL) {
+	em_ordem(No_atual->esquerda);
+	printf("%d \n", No_atual->codigo);
+	em_ordem(No_atual->direita);
+
+	}
+}
+		
+
+
+
+void pos_ordem(No* No_atual) {
+	if(No_atual != NULL) {
+	pos_ordem(No_atual->esquerda);
+	pos_ordem(No_atual->direita);
+	printf("%d \n", No_atual->codigo);
+	}
+}
+
+int altura(No* No_atual){
+	if(No_atual == NULL){
+		return 0;
+	}
+	
+	int altura_esq = altura(No_atual->esquerda);
+	int altura_dir = altura (No_atual->direita);
+	if(altura_esq < altura_dir)
+		return altura_esq;
+	else
+		return altura_dir;
+	}
+
+
+	int x;
+	Arvore *arvore;
+	cria_arvore(arvore);
+	arvore->raiz = insere(1, arvore->raiz);
+	arvore->raiz = insere(2, arvore->raiz);
+	arvore->raiz = insere(3, arvore->raiz);
+	arvore->raiz = insere(4, arvore->raiz);
+	arvore->raiz = insere(5, arvore->raiz);
+	arvore->raiz = insere(3, arvore->raiz);
+	arvore->raiz = insere(4, arvore->raiz);
+	arvore->raiz = insere(5, arvore->raiz);
+	pre_ordem(arvore->raiz);
+	printf("\n");
+	em_ordem(arvore->raiz);
+	printf("\n");
+	pos_ordem(arvore->raiz);
+	x = altura(arvore->raiz);
+	printf("\n");
+	printf("%d\n",x);
+	
+	
+	return 0;
+	
+}
