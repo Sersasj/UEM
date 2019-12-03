@@ -1,10 +1,9 @@
+
+  
 #include <stdio.h>
 #include <stdlib.h>
 
 
-
-
-int main(){
 
 
 	typedef enum{false, true} boolean;
@@ -141,17 +140,21 @@ void pos_ordem(No* No_atual) {
 }
 
 int altura(No* No_atual){
-	if(No_atual == NULL){
+	if(No_atual == NULL || No_atual->esquerda == NULL && No_atual->direita == NULL){
 		return 0;
 	}
 	
-	int altura_esq = altura(No_atual->esquerda);
-	int altura_dir = altura (No_atual->direita);
-	if(altura_esq < altura_dir)
-		return altura_esq;
+	if(altura(No_atual->esquerda) > altura(No_atual->direita))
+		return altura(No_atual->esquerda)+1;
 	else
-		return altura_dir;
+		return altura(No_atual->direita)+1;
 	}
+
+
+
+int main(){
+
+
 
 
 	int x;
